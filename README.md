@@ -157,17 +157,6 @@ Follow the espeak section in **[install.txt](install.txt)**.
 PORT=3001 npm start
 ```
 
-### Termux (Android)
-
-Full step-by-step guide: **[termux.md](termux.md)** (Python 3.11 TUR, `espeak`, model download, npm).
-
-**Common pip errors on Termux**
-
-1. **Python 3.13+** — Kokoro **0.9.x** needs **Python ≥3.10 and &lt;3.13**; use **python3.11** from TUR (see **termux.md**).
-2. **`ResolutionImpossible` / no matching distribution: `torch`** — PyPI has **no PyTorch wheel for Android**. Kokoro depends on `torch`; this often blocks install even with Python 3.11. See **termux.md** §4 (workarounds + **PC/VPS** recommendation).
-
-The **Node + sql.js** UI usually runs on Termux; **Kokoro TTS** on-device usually does not.
-
 ## License
 
 MIT

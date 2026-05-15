@@ -28,15 +28,6 @@ Windows:
   Download a release from: https://github.com/espeak-ng/espeak-ng/releases
   Ensure the espeak-ng binary is on PATH.
 
-Termux (Android):
-  The Termux package name is "espeak" (not espeak-ng); it provides espeak-ng:
-
-    pkg install espeak
-
-  Check: espeak-ng --version   or   espeak --version
-
-  Full Termux guide: termux.md
-
 2) Virtual environment (venv) in the project folder
 --------------------------------------------------------------------------------
 From the repository root (folder containing server.js):
@@ -66,6 +57,13 @@ pip commands:
 
 Note: kokoro usually pulls large dependencies (e.g. PyTorch / ONNX).
   Let pip resolve compatible versions.
+
+Python 3.13: PyPI kokoro 0.9.4 still says Requires-Python <3.13. GitHub main
+  (Aug 2025) allows <3.14 — install from git until a new PyPI release:
+
+  pip install "kokoro @ git+https://github.com/hexgrad/kokoro.git"
+
+  torch is still required separately (install per PyTorch docs for your OS).
 
 4) Quick verification
 --------------------------------------------------------------------------------
@@ -121,23 +119,6 @@ For very long text, set in the environment:
 
   export TTS_PYTHON_TIMEOUT_MS=900000
   npm start
-
-8) Termux (Android)
---------------------------------------------------------------------------------
-Termux default Python is often 3.13+, which cannot install kokoro>=0.9.2.
-"pkg upgrade" does not downgrade Python — you need a separate 3.10–3.12 build.
-
-  python3 --version
-
-Even with Python 3.11, pip often fails with:
-
-  ResolutionImpossible ... no matching distributions: torch
-
-PyPI has no torch wheel for Termux/Android; kokoro requires torch.
-See termux.md (section 4 — torch / ResolutionImpossible).
-
-Full guide: termux.md
-  (Python 3.11 TUR, espeak, model download, npm/sql.js, workarounds)
 
 ================================================================================
 End of install.txt

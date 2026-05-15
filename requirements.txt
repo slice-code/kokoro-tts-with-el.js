@@ -1,6 +1,6 @@
 # Python — TTS synthesis (called from server.js)
 # Install: python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
-# See install.txt (espeak-ng) and termux.md (Android).
+# See install.txt (espeak-ng).
 #
 # Kokoro 0.9.x requires Python >=3.10 and <3.13 (not 3.13+).
 # Check: python3 --version
