@@ -159,13 +159,14 @@ PORT=3001 npm start
 
 ### Termux (Android)
 
-**`pip install -r requirements.txt` fails for `kokoro>=0.9.2`**
+Full step-by-step guide: **[termux.md](termux.md)** (Python 3.11 TUR, `espeak`, model download, npm).
 
-Kokoro **0.9.x** requires **Python ≥3.10 and &lt;3.13**. On Termux with **Python 3.13+**, pip only offers kokoro **≤0.7.16**, so the install errors exactly as you saw.
+**Common pip errors on Termux**
 
-1. Check: `python3 --version`
-2. Create the venv with **Python 3.10–3.12** if your repo provides it (see **[install.txt](install.txt)** § Termux).
-3. Even with the right Python, **torch** / ML wheels may still fail on Android — running the app on a **PC/VPS** and using the phone browser is the most reliable setup. The **Node + sql.js** parts usually work on Termux; **Kokoro TTS** does not.
+1. **Python 3.13+** — Kokoro **0.9.x** needs **Python ≥3.10 and &lt;3.13**; use **python3.11** from TUR (see **termux.md**).
+2. **`ResolutionImpossible` / no matching distribution: `torch`** — PyPI has **no PyTorch wheel for Android**. Kokoro depends on `torch`; this often blocks install even with Python 3.11. See **termux.md** §4 (workarounds + **PC/VPS** recommendation).
+
+The **Node + sql.js** UI usually runs on Termux; **Kokoro TTS** on-device usually does not.
 
 ## License
 
