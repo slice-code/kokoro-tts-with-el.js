@@ -17,7 +17,7 @@ A Text-to-Speech web app using **Kokoro** (Python), **el.js** + **layout.js** on
 
 | Component | Notes |
 |-----------|--------|
-| **Node.js** | **18+** recommended (global `fetch`). After changing Node major version, run `npm rebuild better-sqlite3`. |
+| **Node.js** | **18+** recommended (global `fetch`). App storage uses **sql.js** (SQLite via WASM) — no native addon rebuild when you upgrade Node. |
 | **Python** | **3.10+** recommended; project venv in `venv/`. |
 | **espeak-ng** | Required for Kokoro phonetics — see [install.txt](install.txt). |
 | **Disk space** | Kokoro pulls large ML deps (e.g. PyTorch/ONNX). |
@@ -56,7 +56,7 @@ Open **http://localhost:3000** (or whatever `PORT` you set).
 ```
 onnx/
 ├── server.js              # Express, TTS (spawn Python), store API
-├── tts-sqlite-store.js    # SQLite: scripts + settings KV
+├── tts-sqlite-store.js    # SQLite via sql.js: scripts + settings KV
 ├── package.json
 ├── requirements.txt       # Python deps for TTS
 ├── install.txt            # Python + espeak-ng guide
@@ -133,15 +133,9 @@ npm start
 
 ## Troubleshooting
 
-### `better-sqlite3` — Node ABI mismatch (`NODE_MODULE_VERSION`)
+### Storage / sql.js fails to load
 
-Rebuild the native addon after switching Node version:
-
-```bash
-npm rebuild better-sqlite3
-# or
-rm -rf node_modules && npm install
-```
+Ensure dependencies are installed (`npm install`). The WASM file is loaded from `node_modules/sql.js/dist/`. If you bundle or relocate `node_modules`, set paths accordingly or reinstall sql.js.
 
 ### Kokoro / Python import errors
 

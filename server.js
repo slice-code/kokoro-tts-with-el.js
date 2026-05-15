@@ -42,7 +42,8 @@ if (!fs.existsSync(TEMP_DIR)) {
   fs.mkdirSync(TEMP_DIR, { recursive: true });
 }
 
-registerTtsStoreRoutes(app);
+async function main() {
+  await registerTtsStoreRoutes(app);
 
 /**
  * Batas waktu spawn Python untuk satu request TTS.
@@ -210,12 +211,17 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Kokoro TTS Server running on http://localhost:${PORT}`);
-  console.log(`📝 API Endpoint: http://localhost:${PORT}/api/tts/generate`);
-  console.log(`🐍 Python TTS: ${PYTHON_EXE}`);
-  console.log('⏱ TTS timeout: dynamic from text length, or TTS_PYTHON_TIMEOUT_MS env');
+  app.listen(PORT, () => {
+    console.log(`🚀 Kokoro TTS Server running on http://localhost:${PORT}`);
+    console.log(`📝 API Endpoint: http://localhost:${PORT}/api/tts/generate`);
+    console.log(`🐍 Python TTS: ${PYTHON_EXE}`);
+    console.log('⏱ TTS timeout: dynamic from text length, or TTS_PYTHON_TIMEOUT_MS env');
+  });
+}
+
+main().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });
 
 module.exports = app;
