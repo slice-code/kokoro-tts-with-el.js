@@ -5,8 +5,9 @@ Server Node memanggil skrip lewat Python di folder venv proyek (lihat server.js)
 
 Persyaratan umum
 --------------------------------------------------------------------------------
-- Python 3.10 atau lebih baru disarankan (beberapa dependensi ML tidak mendukung
-  versi yang terlalu lama).
+- Python 3.10, 3.11, atau 3.12 untuk kokoro>=0.9.2 (PyPI: Requires-Python <3.13).
+  Python 3.13+ tidak bisa memasang kokoro 0.9.x lewat pip (hanya 0.7.x ke bawah).
+- Python di bawah 3.10 juga tidak memenuhi kokoro>=0.9.2.
 - Ruang disk cukup untuk model / paket (PyTorch atau runtime ONNX, dll.,
   mengikuti versi paket kokoro yang terpasang).
 - espeak-ng di sistem (dipakai rangkaian fonetik / TTS Kokoro).
@@ -26,6 +27,13 @@ macOS (Homebrew):
 Windows:
   Unduh rilis dari: https://github.com/espeak-ng/espeak-ng/releases
   Pastikan binary espeak-ng ada di PATH.
+
+Termux (Android):
+  Nama paket di repo Termux adalah "espeak" (bukan espeak-ng), isinya espeak-ng:
+
+    pkg install espeak
+
+  Cek: espeak-ng --version   atau   espeak --version
 
 2) Lingkungan virtual (venv) di folder proyek
 --------------------------------------------------------------------------------
@@ -83,6 +91,79 @@ Untuk teks sangat panjang, sesuaikan di lingkungan:
 
   export TTS_PYTHON_TIMEOUT_MS=900000
   npm start
+
+7) Termux (Android) — Python 3.13 dan kokoro>=0.9.2
+--------------------------------------------------------------------------------
+Penyebab: kokoro 0.9.x membutuhkan Python >=3.10 dan <3.13. Termux default
+sekarang Python 3.13.x — pip tidak akan memasang kokoro>=0.9.2.
+
+  python3 --version
+
+PENTING: "pkg upgrade" hanya memperbarui paket Termux; python tetap 3.13.
+Anda perlu Python 3.12 (atau 3.11/3.10) terpisah, BUKAN menaikkan 3.13.
+
+--- Opsi A: Python 3.11 dari TUR (Termux User Repository) ---
+
+  Cari paket (contoh hasil: python3.11/tur-packages 3.11.10):
+
+    pkg search python | grep 3.11
+
+  Pasang (tanpa wajib mengganti python default Termux 3.13):
+
+    pkg install python3.11 espeak build-essential
+
+  Opsional — jadikan perintah "python3" = 3.11 di shell Anda (bisa mengganggu
+  paket Termux lain yang expect 3.13; lebih aman pakai python3.11 eksplisit):
+
+    pkg install python-is-python3.11
+
+  Buat ulang venv proyek dengan 3.11:
+
+    cd ~/tts
+    deactivate 2>/dev/null || true
+    rm -rf venv
+    python3.11 -m venv venv
+    source venv/bin/activate
+    python --version          # harus Python 3.11.x
+    which python
+    pip install --upgrade pip
+    pip install -r requirements.txt
+    python -c "from kokoro import KPipeline; import soundfile, numpy; print('OK')"
+
+  Jalankan server (dari folder proyek, venv aktif atau set PYTHON):
+
+    npm install
+    export PYTHON="$PWD/venv/bin/python"
+    npm start
+
+--- Opsi B: Proot Debian (paling andal untuk Python 3.12) ---
+
+  pkg install proot-distro
+  proot-distro install debian
+  proot-distro login debian
+
+  Di dalam Debian:
+
+    apt update && apt install -y python3 python3-venv python3-pip espeak-ng
+    python3 --version
+    cd /path/ke/tts
+    python3 -m venv venv && source venv/bin/activate
+    pip install -r requirements.txt
+
+  Node/npm bisa di Termux biasa ATAU juga di proot — TTS Python di proot.
+
+--- Opsi C: Workaround awscli (tidak resmi, bisa rapuh) ---
+
+  Beberapa pengguna memakai libpython3.12 dari paket awscli + wrapper clang.
+  Lihat issue Termux #28880 — hanya untuk kasus khusus, tidak disarankan untuk
+  produksi.
+
+--- Opsi D: TTS di PC/VPS, Termux hanya browser ---
+
+  npm install && npm start di laptop; HP buka http://IP:3000
+
+Jangan paksa kokoro 0.7.x di Python 3.13 hanya agar pip lolos — torch sering
+gagal di Android. Setelah Python 3.12 benar, gagal di torch = batasan platform.
 
 ================================================================================
 Akhir berkas install.txt

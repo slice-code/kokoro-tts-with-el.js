@@ -1,6 +1,9 @@
 # Python — sintesis TTS (dipanggil dari server.js)
 # Pasang: python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
 # Lihat juga install.txt (espeak-ng di sistem).
+#
+# Kokoro 0.9.x membutuhkan Python >=3.10 dan <3.13 (bukan 3.13+).
+# Cek: python3 --version — Termux / panduan: install.txt bagian "Termux".
 
 kokoro>=0.9.2
 soundfile

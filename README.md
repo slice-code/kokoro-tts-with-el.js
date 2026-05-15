@@ -159,7 +159,13 @@ PORT=3001 npm start
 
 ### Termux (Android)
 
-Running the **full Kokoro ML stack** on Termux is often **unsupported or fragile** (PyTorch/ONNX wheels for Android). Most reliable: run the server on a PC/VPS and open it from the phone browser on the same network.
+**`pip install -r requirements.txt` fails for `kokoro>=0.9.2`**
+
+Kokoro **0.9.x** requires **Python ≥3.10 and &lt;3.13**. On Termux with **Python 3.13+**, pip only offers kokoro **≤0.7.16**, so the install errors exactly as you saw.
+
+1. Check: `python3 --version`
+2. Create the venv with **Python 3.10–3.12** if your repo provides it (see **[install.txt](install.txt)** § Termux).
+3. Even with the right Python, **torch** / ML wheels may still fail on Android — running the app on a **PC/VPS** and using the phone browser is the most reliable setup. The **Node + sql.js** parts usually work on Termux; **Kokoro TTS** does not.
 
 ## License
 
