@@ -41,6 +41,13 @@ pip install -r requirements.txt
 
 Step-by-step (including **espeak-ng** per OS) is in **[install.txt](install.txt)**.
 
+Optional — pre-download Kokoro weights (avoids waiting on first TTS request):
+
+```bash
+python scripts/download_kokoro_models.py
+# or: npm run download-models
+```
+
 ### 3. Run
 
 ```bash

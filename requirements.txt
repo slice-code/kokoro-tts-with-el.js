@@ -4,7 +4,13 @@
 #
 # Kokoro 0.9.x requires Python >=3.10 and <3.13 (not 3.13+).
 # Check: python3 --version
+#
+# Audio model weights are NOT pip packages (they come from Hugging Face on first use).
+# To download them ahead of time, after pip install run:
+#   python scripts/download_kokoro_models.py
+#   npm run download-models
 
 kokoro>=0.9.2
 soundfile
 numpy
+huggingface-hub

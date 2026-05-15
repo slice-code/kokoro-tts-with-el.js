@@ -74,10 +74,15 @@ With venv active:
 If that succeeds, the server can use:
   venv/bin/python3   (Linux/macOS) or venv\Scripts\python.exe (Windows)
 
-5) Kokoro model download (first run)
+5) Kokoro model download (first run or preload)
 --------------------------------------------------------------------------------
-Weights are not downloaded by a separate project command. Kokoro fetches them
-from Hugging Face on the first KPipeline run.
+Weights are not pip packages. Kokoro fetches them from Hugging Face (repo
+hexgrad/Kokoro-82M) on the first KPipeline run, or you can preload:
+
+  python scripts/download_kokoro_models.py
+  npm run download-models
+
+  python scripts/download_kokoro_models.py --voices af_heart,af_bella,am_adam
 
 Optional — set a dedicated cache folder:
 
