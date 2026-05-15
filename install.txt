@@ -1,0 +1,88 @@
+================================================================================
+Instalasi Python — Kokoro TTS (proyek onnx / kokoro-tts-app)
+================================================================================
+Server Node memanggil skrip lewat Python di folder venv proyek (lihat server.js).
+
+Persyaratan umum
+--------------------------------------------------------------------------------
+- Python 3.10 atau lebih baru disarankan (beberapa dependensi ML tidak mendukung
+  versi yang terlalu lama).
+- Ruang disk cukup untuk model / paket (PyTorch atau runtime ONNX, dll.,
+  mengikuti versi paket kokoro yang terpasang).
+- espeak-ng di sistem (dipakai rangkaian fonetik / TTS Kokoro).
+
+1) Paket sistem: espeak-ng
+--------------------------------------------------------------------------------
+Ubuntu / Debian:
+  sudo apt-get update
+  sudo apt-get install -y espeak-ng
+
+Fedora:
+  sudo dnf install espeak-ng
+
+macOS (Homebrew):
+  brew install espeak-ng
+
+Windows:
+  Unduh rilis dari: https://github.com/espeak-ng/espeak-ng/releases
+  Pastikan binary espeak-ng ada di PATH.
+
+2) Lingkungan virtual (venv) di folder proyek
+--------------------------------------------------------------------------------
+Dari root repositori (folder yang berisi server.js):
+
+  python3 -m venv venv
+
+Aktivasi:
+  Linux / macOS:    source venv/bin/activate
+  Windows CMD:      venv\Scripts\activate.bat
+  Windows PowerShell: venv\Scripts\Activate.ps1
+
+3) Pasang dependensi Python untuk endpoint TTS
+--------------------------------------------------------------------------------
+Paket yang dipakai skrip inline di server.js:
+  - kokoro   (KPipeline)
+  - soundfile (sf.write)
+  - numpy    (np.concatenate)
+
+Perintah pip:
+
+  pip install --upgrade pip
+  pip install -r requirements.txt
+
+  (setara manual: pip install "kokoro>=0.9.2" soundfile numpy)
+
+Catatan: paket kokoro biasanya menarik dependensi besar (mis. PyTorch / ONNX).
+  Biarkan pip menyelesaikan versi yang kompatibel.
+
+4) Verifikasi cepat
+--------------------------------------------------------------------------------
+Dengan venv aktif:
+
+  python -c "from kokoro import KPipeline; import soundfile, numpy; print('OK')"
+
+Jika tidak error, server dapat memakai:
+  venv/bin/python3   (Linux/macOS) atau venv\Scripts\python.exe (Windows)
+
+5) Integrasi dengan server Node (opsional)
+--------------------------------------------------------------------------------
+Secara default server.js mencari interpreter di antara:
+  - variabel lingkungan PYTHON (path absolut ke python jika di-set)
+  - venv/bin/python3, venv/bin/python
+  - venv\Scripts\python.exe
+  - fallback: python3 di PATH
+
+Contoh pakai interpreter tertentu:
+
+  export PYTHON=/path/ke/venv/bin/python3
+  npm start
+
+6) Timeout generate (opsional)
+--------------------------------------------------------------------------------
+Untuk teks sangat panjang, sesuaikan di lingkungan:
+
+  export TTS_PYTHON_TIMEOUT_MS=900000
+  npm start
+
+================================================================================
+Akhir berkas install.txt

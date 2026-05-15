@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kokoro TTS - Text to Voice</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f3f4f6;
+    }
+    
+    #app {
+      min-height: 100vh;
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <!-- el.js -->
+  <script src="https://unpkg.com/@slice-code/el.js@1.0.6/el.js"></script>
+  <!-- layout.js -->
+  <script src="layout.js"></script>
+  <script src="page/tts-history-storage.js"></script>
+  <script src="page/tts-user-settings.js"></script>
+  <!-- Text to Voice Page -->
+  <script src="page/text-to-voice.js"></script>
+  <script src="page/history.js"></script>
+  <script src="page/settings.js"></script>
+  
+  <script>
+    // Layout sama untuk semua halaman (lihat layout.js: fullWidthDesktop, pageContentPadding, hideLayout, roles)
+    const TTS_PAGE_LAYOUT = {
+      fullWidthDesktop: true,
+      pageContentPadding: '0',
+    };
+
+    // Register pages
+    layout.addPage({
+      path: '/',
+      ...TTS_PAGE_LAYOUT,
+      component: () => {
+        // Re-create the page element each time
+        return window.TextToVoicePage.create();
+      },
+    });
+
+    layout.addPage({
+      path: '/history',
+      ...TTS_PAGE_LAYOUT,
+      component: () => window.HistoryPage.create(),
+    });
+
+    layout.addPage({
+      path: '/settings',
+      ...TTS_PAGE_LAYOUT,
+      component: () => window.SettingsPage.create(),
+    });
+    
+    // Add sidebar menu
+    layout.addSideMenu([
+      {
+        name: 'Text to Voice',
+        page: '/',
+        icon: 'fas fa-microphone',
+      },
+      {
+        name: 'Naskah',
+        page: '/history',
+        icon: 'fas fa-bookmark',
+      },
+      {
+        name: 'Settings',
+        page: '/settings',
+        icon: 'fas fa-cog',
+      }
+    ]);
+    
+    // Add navbar menu
+    layout.addNavbar([
+      { name: 'Home', page: '/' },
+      { name: 'Naskah', page: '/history' },
+      { name: 'Settings', page: '/settings' },
+    ]);
+    
+    // Set theme
+    layout.setTheme('blue');
+    
+    // Set navbar title
+    layout.setNavbarTitle('🎙️ Kokoro TTS');
+    
+    // Initialize layout
+    layout.render();
+  </script>
+</body>
+</html>
